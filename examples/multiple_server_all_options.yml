@@ -1,0 +1,121 @@
+---
+version: 1
+libvirt:
+  #driver: kvm or qemu
+  #host: "localhost"
+  #connect_via_ssh: false #Must be true if host is remote
+  #username: "rtalur" #used if connect_via_ssh is true
+  #password: "dummypassword" #used if connect_via_ssh is true
+  #id_ssh_key_file: $HOME/.ssh/id_rsa #ssh private key to access libvirt
+  #socket:
+  #uri:
+  #storage_pool_name: 'default'
+  #management_network_name:
+  #management_network_address:
+  #management_network_guest_ipv6:
+servers:
+  - server1:
+    #ssh_username:
+    #ssh_password:
+    #ssh_private_key_path:
+    #ssh_forward_agent:
+    #ssh_insert_key:
+    synced_folders:
+    - source: "./"
+      dest: "/vagrant"
+      type: "rsync"
+      disabled: "true"
+    libvirt:
+      #hostname, box, box_url are to be overriden with provider specific info
+      hostname: "server1"
+      box: "gluster-dev-fedora"
+      #box_url:
+      #domain options
+      memory: 1024
+      cpus: 1
+      nested: true
+      #network definitions
+      networks:
+      - identifier: "private_network" #or public_network, see below
+        auto_config: true
+        ip:  192.168.134.33 #OR type: dhcp
+        libvirt__network_name: "gluster_vagrant_new"
+        libvirt__netmask: 255.255.255.0
+        libvirt__dhcp_enabled: true
+        libvirt__dhcp_start: 192.168.134.128
+        libvirt__dhcp_stop: 192.168.134.254
+        libvirt__forward_mode: "none" #OR nat, route, veryisolated
+      disks:
+      - count: 1
+        size: "1G"
+      - count: 5
+  - server2:
+    #ssh_username:
+    #ssh_password:
+    #ssh_private_key_path:
+    #ssh_forward_agent:
+    #ssh_insert_key:
+    synced_folders:
+    - source: "./"
+      dest: "/vagrant"
+      type: "rsync"
+      disabled: "true"
+    libvirt:
+      #hostname, box, box_url are to be overriden with provider specific info
+      hostname: "server2"
+      box: "fedora/24-cloud-base" #note: this box is different than that of other servers
+      #box_url:
+      #domain options
+      memory: 1024
+      cpus: 1
+      nested: true
+      #network definitions
+      networks:
+      - identifier: "private_network" #or public_network, see below
+        auto_config: true
+        ip:  192.168.134.34 #OR type: dhcp
+        libvirt__network_name: "gluster_vagrant_new"
+        libvirt__netmask: 255.255.255.0
+        libvirt__dhcp_enabled: true
+        libvirt__dhcp_start: 192.168.134.128
+        libvirt__dhcp_stop: 192.168.134.254
+        libvirt__forward_mode: "none" #OR nat, route, veryisolated
+      disks:
+      - count: 1
+        size: "1G"
+      - count: 5
+  - server3:
+    #ssh_username:
+    #ssh_password:
+    #ssh_private_key_path:
+    #ssh_forward_agent:
+    #ssh_insert_key:
+    synced_folders:
+    - source: "./"
+      dest: "/vagrant"
+      type: "rsync"
+      disabled: "true"
+    libvirt:
+      #hostname, box, box_url are to be overriden with provider specific info
+      hostname: "server3"
+      box: "gluster-dev-fedora"
+      #box_url:
+      #domain options
+      memory: 1024
+      cpus: 1
+      nested: true
+      #network definitions
+      networks:
+      - identifier: "private_network" #or public_network, see below
+        auto_config: true
+        ip:  192.168.134.35 #OR type: dhcp
+        libvirt__network_name: "gluster_vagrant_new"
+        libvirt__netmask: 255.255.255.0
+        libvirt__dhcp_enabled: true
+        libvirt__dhcp_start: 192.168.134.128
+        libvirt__dhcp_stop: 192.168.134.254
+        libvirt__forward_mode: "none" #OR nat, route, veryisolated
+      disks:
+      - count: 1
+        size: "1G"
+      - count: 5

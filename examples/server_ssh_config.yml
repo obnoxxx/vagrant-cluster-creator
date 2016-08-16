@@ -1,0 +1,12 @@
+---
+version: 1
+servers:
+  - server1:
+    #ssh_username:
+    #ssh_password:
+    #ssh_private_key_path:
+    #ssh_forward_agent:
+    #ssh_insert_key:
+    libvirt:
+      hostname: "server1"
+      box: "fedora/24-cloud-base"

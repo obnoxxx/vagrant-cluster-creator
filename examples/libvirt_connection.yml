@@ -1,0 +1,22 @@
+---
+version: 1
+libvirt:
+  #driver: kvm or qemu
+  #host: "localhost"
+  #connect_via_ssh: false #Must be true if host is remote
+  #username: "rtalur" #used if connect_via_ssh is true
+  #password: "dummypassword" #used if connect_via_ssh is true
+  #id_ssh_key_file: $HOME/.ssh/id_rsa #ssh private key to access libvirt
+  #socket:
+  #uri:
+  #storage_pool_name: 'default'
+  #management_network_name:
+  #management_network_address:
+  #management_network_guest_ipv6:
+servers:
+  - server1:
+    libvirt:
+      hostname: "server1"
+      box: "fedora/24-cloud-base"
+      disks:
+      - count: 5
