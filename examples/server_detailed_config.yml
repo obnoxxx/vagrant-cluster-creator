@@ -2,6 +2,7 @@
 version: 1
 servers:
   - server1:
+    synced_folders:
     - source: "./"
       dest: "/vagrant"
       type: "rsync"
