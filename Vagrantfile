@@ -181,7 +181,7 @@ def configure_libvirt_network(config, server, serverid)
     libvirt__dhcp_enabled: true,
     libvirt__dhcp_start: "#{$default_ip_three_octets}128",
     libvirt__dhcp_stop: "#{$default_ip_three_octets}254",
-    libvirt__forward_mode: "none"
+    libvirt__forward_mode: "nat"
 
 
 
