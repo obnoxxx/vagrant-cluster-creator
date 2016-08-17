@@ -10,6 +10,9 @@ A YAML config file based approach to creating cluster of machines using vagrant
 
 Look into the examples directory for sample config files.
 
+# Demo
+[![asciicast](https://asciinema.org/a/83076.png)](https://asciinema.org/a/83076)
+
 #NOTE
 1. Supports only libvirt provider as of now.
 2. No provisioning/provision steps support in the config file.
