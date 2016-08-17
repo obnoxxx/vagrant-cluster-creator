@@ -15,7 +15,8 @@ Look into the examples directory for sample config files.
 2. No provisioning/provision steps support in the config file.
 
 # Requirements
-A working Vagrant setup
+A working Vagrant setup.
+If you want to setup Vagrant on Fedora 24, refer to http://blog.raghavendratalur.in/2016/08/getting-started-with-vagrant-on-fedora.html
 
 ## Why?
 Sometimes you might need to quickly create a cluster of machines and there is no other tool better than vagrant; but what if you want to change the configuration of cluster frequently? Yes, exactly, move the data(config) out of the Vagrantfile and hack away to glory.
