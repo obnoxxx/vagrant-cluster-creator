@@ -7,8 +7,6 @@ VAGRANTFILE_API_VERSION = "2"
 VCC_VERSION = "1"
 
 
-$default_ip_three_octets = "192.168.68."
-$default_ip_4th_octet_start = 2
 
 default_yml =  <<-EOF
 ---
@@ -75,6 +73,10 @@ if ARGV[0] == "up"
     print "\n\nNo config file found.\nUsing default config.\nCheckout examples directory for more options.\n\n"
     vcc_config = YAML::load(config_file)
   end
+
+  if vcc_config['default_ip_start_address'].nil?
+    vcc_config['default_ip_start_address'] = "192.168.68.2"
+  end
   File.open('./.last_used.conf', 'w') {|f| f.write vcc_config.to_yaml }
 
   if vcc_config['dump_output_config'] != false
@@ -85,7 +87,9 @@ if ARGV[0] == "up"
     #hosts section
     $output_conf.puts "[hosts]"
     (0..vcc_config['servers'].length-1).each do |servernum|
-      $output_conf.puts "#{$default_ip_three_octets}#{$default_ip_4th_octet_start + servernum}"
+      octets = vcc_config['default_ip_start_address'].split('.')
+      octets[-1] = octets[-1].to_i + servernum
+      $output_conf.puts octets.join('.')
     end
     $output_conf.puts ""
 
@@ -95,7 +99,9 @@ if ARGV[0] == "up"
       devices = Array.new
       diskid=2 #Assuming that there is only one main disk attached and skipping it
       if !server['libvirt'].nil? && !server['libvirt']['disks'].nil?
-        ip = "#{$default_ip_three_octets}#{$default_ip_4th_octet_start + servernum}"
+        octets = vcc_config['default_ip_start_address'].split('.')
+        octets[-1] = octets[-1].to_i + servernum
+        ip = octets.join('.')
         $output_conf.puts "[backend-setup:#{ip}]"
         (0..server['libvirt']['disks'].length-1).each do |diskset|
           disk = server['libvirt']['disks'][diskset]
@@ -170,17 +176,18 @@ def configure_libvirt_vm(config, server)
   end
 end
 
-def configure_libvirt_network(config, server, serverid)
+def configure_libvirt_network(config, vcc_config, server, serverid)
   config.vm.provider :libvirt do |lv, override|
     #one network which has static ip by default
+    octets = vcc_config['default_ip_start_address'].split('.')
+    octets[-1] = octets[-1].to_i + serverid
+
     override.vm.network "private_network",
     auto_config: true,
-    ip: "#{$default_ip_three_octets}#{$default_ip_4th_octet_start + serverid}",
-    libvirt__network_name: "vagrant_cluster_creator_default",
+    ip: octets.join('.'),
+    libvirt__network_name: vcc_config['default_network_name'] || "vagrant_cluster_creator",
     libvirt__netmask: "255.255.255.0",
-    libvirt__dhcp_enabled: true,
-    libvirt__dhcp_start: "#{$default_ip_three_octets}128",
-    libvirt__dhcp_stop: "#{$default_ip_three_octets}254",
+    libvirt__dhcp_enabled: false,
     libvirt__forward_mode: "nat"
 
 
@@ -272,7 +279,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       #configure network options
       #empty
       #override network options
-      configure_libvirt_network(srv, server, serverid)
+      configure_libvirt_network(srv, vcc_config, server, serverid)
       #configure_docker_network(config, server, m)
 
       #configure disks

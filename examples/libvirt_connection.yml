@@ -1,5 +1,7 @@
 ---
 version: 1
+default_ip_start_address: "192.168.68.2"
+#default_network_name:
 libvirt:
   #driver: kvm or qemu
   #host: "localhost"
