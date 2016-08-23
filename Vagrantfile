@@ -308,9 +308,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell" do |s|
     ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
     s.inline = <<-SHELL
-      mkdir -p /root/.ssh
+      test -d /root/.ssh || mkdir -m 700 -p /root/.ssh
+      test -d /home/vagrant/.ssh || mkdir -m 700 -p /home/vagrant/.ssh
       echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
       echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+      chmod 600 /root/.ssh/authorized_keys
+      chmod 600 /home/vagrant/.ssh/authorized_keys
+      restorecon -R -v /root/.ssh
+      restorecon -R -v /home/vagrant/.ssh
     SHELL
   end
   #user defined provision steps
