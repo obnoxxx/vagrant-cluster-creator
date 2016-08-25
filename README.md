@@ -6,7 +6,19 @@ A YAML config file based approach to creating cluster of machines using vagrant
 2. `cd vagrant-cluster-creator`
 3. `vagrant up # You will get the default config`  
      `OR`  
-`VAGRANT_CLUSTER_CREATOR_CONFIG='<config_yaml_file>' vagrant up # For user defined config file`
+`VAGRANT_CLUSTER_CONFIG='<config_yaml_file>' vagrant up # For user defined config file`
+
+```
+NOTE
+If you want to create another cluster without destroying the current one
+you should clone the repo once again into a different directory.
+
+The VMs created have the parent dir name as prefix. You would probably want to
+clone the repo with a command like this
+
+git clone https://github.com/raghavendra-talur/vagrant-cluster-creator.git test1
+git clone https://github.com/raghavendra-talur/vagrant-cluster-creator.git test2
+```
 
 Look into the examples directory for sample config files.
 

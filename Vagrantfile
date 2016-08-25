@@ -56,7 +56,7 @@ end
 
 
 if ARGV[0] == "up"
-  config_file = ENV['VAGRANT_CLUSTER_CREATOR_CONFIG'] || default_yml
+  config_file = ENV['VAGRANT_CLUSTER_CONFIG'] || default_yml
   #Load config file
   if File.file?(config_file)
     vcc_config = YAML.load_file(File.join(File.dirname(__FILE__), config_file))
@@ -77,7 +77,24 @@ if ARGV[0] == "up"
   if vcc_config['default_ip_start_address'].nil?
     vcc_config['default_ip_start_address'] = "192.168.68.2"
   end
-  File.open('./.last_used.conf', 'w') {|f| f.write vcc_config.to_yaml }
+  File.open('./.last_used.conf.new', 'w') {|f| f.write vcc_config.to_yaml }
+  if File.file?('./.last_used.conf')
+    if FileUtils.cmp('./.last_used.conf','./.last_used.conf.new')
+      File.delete('./.last_used.conf.new')
+    else
+      print "\n\nConfig file changed without destroying the previous setup.\n"
+      print "You should probably perform a vagrant destroy.\n"
+      print "To force, please remove .vagrant dir and .last_used.conf file\n"
+      print "and run vagrant up again.\n"
+      #File.delete('./.last_used.conf.new')
+      exit
+    end
+  else
+    File.rename('./.last_used.conf.new','./.last_used.conf')
+  end
+
+
+
 
   if vcc_config['dump_output_config'] != false
     #open file to write gdeploy config
@@ -125,6 +142,9 @@ else
 
   if File.file?('./.last_used.conf')
     vcc_config = YAML.load_file(File.join(File.dirname(__FILE__), './.last_used.conf'))
+    if ARGV[0] == "destroy"
+      File.delete('./.last_used.conf')
+    end
   else
     print "No saved config file with name .last_used.conf found.\n"
     print "Probably you executed a vagrant command without executing vagrant up first.\n"
