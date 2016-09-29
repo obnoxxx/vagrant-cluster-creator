@@ -232,6 +232,8 @@ def configure_libvirt_network(config, vcc_config, server, serverid)
         elsif network['identifier'] == "public_network"
           override.vm.network network['identifier'].to_sym,
             dev: network['dev']
+            type: (network['type'] if network['type']),
+            mode: (network['mode'] if network['mode'])
         else
           print "network identifier not supported\n"
         end
