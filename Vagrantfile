@@ -231,7 +231,7 @@ def configure_libvirt_network(config, vcc_config, server, serverid)
           type: "dhcp"
         elsif network['identifier'] == "public_network"
           override.vm.network network['identifier'].to_sym,
-            dev: network['dev']
+            dev: network['dev'],
             type: (network['type'] if network['type']),
             mode: (network['mode'] if network['mode'])
         else
